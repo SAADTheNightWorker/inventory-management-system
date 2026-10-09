@@ -11,10 +11,10 @@ const logger = require("../Utils/logger");
 
 dotenv.config();
 
-const getCategory = async (req, res) => {
+const getTransactionTypes = async (req, res) => {
   try {
     const payload = {
-      tableName: tables.category,
+      tableName: tables.transaction_types,
     };
     await GlobalSelect(payload, res);
   } catch (error) {
@@ -24,22 +24,24 @@ const getCategory = async (req, res) => {
   }
 };
 
-const createCategory = async (req, res) => {
+const createTransactionTypes = async (req, res) => {
   try {
-    const { category, createdby } = req.body;
+    const { type_code, type_name, movement_type, created_by } = req.body;
 
-    if (!category) {
+    if (!type_name) {
       return res
         .status(400)
         .send(RESPONSE(false, "Missing required fields", {}));
     }
 
     const payload = {
-      tableName: tables.category,
+      tableName: tables.transaction_types,
       databaseFields: {
-        category: category,
-        createdBy: createdby,
-        createdAt: moment.tz("Asia/Karachi").format("YYYY-MM-DD"),
+        type_code: type_code,
+        type_name: type_name,
+        movement_type: movement_type,
+        created_by: created_by,
+        created_at: moment.tz("Asia/Karachi").format("YYYY-MM-DD-HH-mm-ss"),
       },
     };
 
@@ -50,11 +52,11 @@ const createCategory = async (req, res) => {
   }
 };
 
-const updateCategory = async (req, res) => {
+const updateTransactionTypes = async (req, res) => {
   try {
-    const { id, category } = req.body;
+    const { id, type_code, type_name, movement_type, is_active, updated_by,  } = req.body;
 
-    if (!id || !category) {
+    if (!id && !type_code) {
       return res
         .status(400)
         .send(RESPONSE(false, "Missing required fields", {}));
@@ -62,9 +64,13 @@ const updateCategory = async (req, res) => {
 
     const payload = {
       id: id,
-      tableName: tables.category,
+      tableName: tables.transaction_types,
       databaseFields: {
-        category: category,
+        type_name: type_name,
+        movement_type: movement_type,
+        is_active: is_active || 1,
+        updated_by: updated_by,
+        updated_at: moment.tz("Asia/Karachi").format("YYYY-MM-DD-HH-mm-ss"),
       },
     };
 
@@ -76,7 +82,7 @@ const updateCategory = async (req, res) => {
   }
 };
 
-const deleteCategory = async (req, res) => {
+const deleteTransactionTypes = async (req, res) => {
   try {
     const { id } = req.body;
 
@@ -87,7 +93,7 @@ const deleteCategory = async (req, res) => {
     }
 
     const payload = {
-      tableName: tables.category,
+      tableName: tables.transaction_types,
       databaseFields: {
         id: id,
       },
@@ -102,8 +108,8 @@ const deleteCategory = async (req, res) => {
 };
 
 module.exports = {
-  getCategory,
-  createCategory,
-  updateCategory,
-  deleteCategory,
+  getTransactionTypes,
+  createTransactionTypes,
+  updateTransactionTypes,
+  deleteTransactionTypes,
 };

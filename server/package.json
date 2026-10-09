@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "Tahir Server Made by M.SAAD and M.Rafay",
+  "description": "Tahir Server Made by M.SAAD and M.Sohaib",
   "main": "app.js",
   "scripts": {
     "dev": "node app.js ",

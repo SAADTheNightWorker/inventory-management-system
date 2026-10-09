@@ -11,50 +11,57 @@ const logger = require("../Utils/logger");
 
 dotenv.config();
 
-const getCompany = async (req, res) => {
+const getItems = async (req, res) => {
   try {
     const payload = {
-      tableName: tables.insuranceCompany,
+      tableName: tables.items,
     };
     await GlobalSelect(payload, res);
   } catch (error) {
     return res
       .status(500)
-      .send(RESPONSE(false, "Error fetching company", error));
+      .send(RESPONSE(false, "Error fetching clients", error));
   }
 };
 
-const createCompany = async (req, res) => {
+const createItems = async (req, res) => {
   try {
-    const { company, createdby } = req.body;
+    const { item_name, created_by, item_code, description, min_stock, reorder_level, category_id, unit_id, issue_method } = req.body;
 
-    if (!company) {
+    if (!item_name) {
       return res
         .status(400)
         .send(RESPONSE(false, "Missing required fields", {}));
     }
 
     const payload = {
-      tableName: tables.insuranceCompany,
+      tableName: tables.items,
       databaseFields: {
-        company: company,
-        createdBy: createdby,
-        createdAt: moment.tz("Asia/Karachi").format("YYYY-MM-DD"),
+        item_code: item_code,
+        item_name: item_name,
+        description: description,
+        min_stock: min_stock,
+        reorder_level: reorder_level,
+        category_id: category_id,
+        unit_id: unit_id,
+        issue_method: issue_method,
+        created_by: created_by,
+        created_at: moment.tz("Asia/Karachi").format("YYYY-MM-DD-HH-mm-ss"),
       },
     };
 
     await GlobalInsert(payload, res);
   } catch (error) {
     logger.error(`Error creating client: ${error.message}`, error);
-    return res.status(500).send(RESPONSE(false, "Error creating company", {}));
+    return res.status(500).send(RESPONSE(false, "Error creating client", {}));
   }
 };
 
-const updateCompany = async (req, res) => {
+const updateItems = async (req, res) => {
   try {
-    const { id, company } = req.body;
+    const { id, item_code, item_name, category_id, unit_id, description, min_stock, issue_method, is_active } = req.body;
 
-    if (!id || !company) {
+    if (!id && !item_code) {
       return res
         .status(400)
         .send(RESPONSE(false, "Missing required fields", {}));
@@ -62,9 +69,16 @@ const updateCompany = async (req, res) => {
 
     const payload = {
       id: id,
-      tableName: tables.insuranceCompany,
+      tableName: tables.items,
       databaseFields: {
-        company: company,
+        item_name: item_name,
+        category_id: category_id,
+        unit_id: unit_id,
+        description: description,
+        min_stock: min_stock,
+        issue_method: issue_method,
+        is_active: is_active,
+        updated_at: moment.tz("Asia/Karachi").format("YYYY-MM-DD-HH-mm-ss"),
       },
     };
 
@@ -72,11 +86,11 @@ const updateCompany = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .send(RESPONSE(false, "Error updating company", error));
+      .send(RESPONSE(false, "Error updating client", error));
   }
 };
 
-const deleteCompany = async (req, res) => {
+const deleteItems = async (req, res) => {
   try {
     const { id } = req.body;
 
@@ -87,7 +101,7 @@ const deleteCompany = async (req, res) => {
     }
 
     const payload = {
-      tableName: tables.insuranceCompany,
+      tableName: tables.items,
       databaseFields: {
         id: id,
       },
@@ -97,13 +111,13 @@ const deleteCompany = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .send(RESPONSE(false, "Error deleting company", error));
+      .send(RESPONSE(false, "Error deleting client", error));
   }
 };
 
 module.exports = {
-  getCompany,
-  createCompany,
-  updateCompany,
-  deleteCompany,
+  getItems,
+  createItems,
+  updateItems,
+  deleteItems,
 };

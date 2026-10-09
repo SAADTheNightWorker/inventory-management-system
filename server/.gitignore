@@ -17,3 +17,6 @@ yarn-error.log*
 .env
 
 text.txt
+
+# logger
+application.log

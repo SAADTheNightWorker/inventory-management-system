@@ -1,5 +1,6 @@
 const { GlobalDelete } = require("../GlobalFunctions/GlobalDelete");
 const { GlobalSelect } = require("../GlobalFunctions/GlobalSelect");
+const { GlobalUpdate } = require("../GlobalFunctions/GlobalUpdate");
 const RESPONSE = require("../GlobalResponse/RESPONSE");
 const logger = require("../Utils/logger");
 const sendUserCredentials = require("../Utils/sendmail");
@@ -42,8 +43,8 @@ const createUser = async (req, res) => {
         name: name,
         password: hashedPassword,
         role: role,
-        isDeleted: 0,
-        createdAt: moment.tz("Asia/Karachi").format("YYYY-MM-DD-HH-MMM-SSS"),
+        is_deleted: 0,
+        created_at: moment.tz("Asia/Karachi").format("YYYY-MM-DD-HH-mm-ss"),
       },
     };
 
@@ -66,7 +67,13 @@ const createUser = async (req, res) => {
       } else if (dbError.code === "ER_DUP_ENTRY") {
         return res
           .status(409)
-          .json(RESPONSE(false, "Duplicate username. User already exists.", dbError));
+          .json(
+            RESPONSE(
+              false,
+              "Duplicate username, User already exists.",
+              dbError,
+            ),
+          );
       } else {
         return res
           .status(500)
@@ -110,9 +117,9 @@ const deleteUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const { id, name, email, role, profileImg, isActive } = req.body;
+    const { id, name, email, role, profile_img, is_active } = req.body;
 
-    if (!id || !email || !role || !profileImg || !isActive || !name) {
+    if (!id || !email) {
       return res
         .status(400)
         .send(RESPONSE(false, "Missing required fields", {}));
@@ -125,16 +132,17 @@ const updateUser = async (req, res) => {
         name: name,
         email: email,
         role: role,
-        profileImg: profileImg,
-        isActive: isActive,
+        profile_img: profile_img,
+        is_active: is_active || 1,
+        updated_at: moment.tz("Asia/Karachi").format("YYYY-MM-DD-HH-mm-ss"),
       },
     };
 
-    await GlobalDelete(payload, res);
+    await GlobalUpdate(payload, res);
   } catch (error) {
     return res
       .status(500)
-      .send(RESPONSE(false, "Error deleting client", error));
+      .send(RESPONSE(false, "Error while updating client", error));
   }
 };
 
@@ -142,9 +150,15 @@ const resetUserPassword = async (req, res) => {
   const { email, currentPassword, newPassword } = req.body;
 
   if (!email || !currentPassword || !newPassword) {
-    return res.status(400).send(
-      RESPONSE(false, "Email, current password, and new password are required", {})
-    );
+    return res
+      .status(400)
+      .send(
+        RESPONSE(
+          false,
+          "Email, current password, and new password are required",
+          {},
+        ),
+      );
   }
 
   try {
@@ -161,7 +175,9 @@ const resetUserPassword = async (req, res) => {
 
     const isMatch = await bcrypt.compare(currentPassword, password);
     if (!isMatch) {
-      logger.info(`Error: Password mismatch. Provided: ${currentPassword}, Stored: ${password}`);
+      logger.info(
+        `Error: Password mismatch. Provided: ${currentPassword}, Stored: ${password}`,
+      );
       return res
         .status(400)
         .send(RESPONSE(false, "Current password is incorrect", {}));

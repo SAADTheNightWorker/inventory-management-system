@@ -13,7 +13,7 @@ const router = express.Router();
 router.get("/", getUser);
 router.post("/", createUser);
 router.put("/", updateUser);
-router.delete("/", deleteUser);
+router.put("/delete", deleteUser);
 router.put("/reset", resetUserPassword);
 
 module.exports = router;

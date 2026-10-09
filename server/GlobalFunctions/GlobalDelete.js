@@ -4,9 +4,11 @@ const logger = require("../Utils/logger"); // Import the logger
 
 const GlobalDelete = async (payload, res) => {
   try {
-    const sql = `DELETE FROM ${payload.tableName} WHERE id = ?`;
+    const sql = `UPDATE ${payload.tableName} SET is_deleted = 1 WHERE id = ?`;
 
-    logger.info(`Executing Query: ${sql} with ID: ${payload.databaseFields.id}`);
+    logger.info(
+      `Executing Query: ${sql} with ID: ${payload.databaseFields.id}`,
+    );
 
     const result = await performQuery(sql, [payload.databaseFields.id]);
 
@@ -18,11 +20,13 @@ const GlobalDelete = async (payload, res) => {
         response(
           true,
           `Data Has Been Successfully Deleted From ${payload.tableName}`,
-          result
-        )
+          result,
+        ),
       );
   } catch (error) {
-    logger.error(`Error deleting data from ${payload.tableName}: ${error.message}`);
+    logger.error(
+      `Error deleting data from ${payload.tableName}: ${error.message}`,
+    );
 
     return res
       .status(500)
@@ -30,8 +34,8 @@ const GlobalDelete = async (payload, res) => {
         response(
           false,
           `Error While Deleting Data In ${payload.tableName}`,
-          {}
-        )
+          {},
+        ),
       );
   }
 };

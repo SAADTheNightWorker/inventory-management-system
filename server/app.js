@@ -37,8 +37,6 @@ app.use(
   }),
 );
 
-app.use(cors());
-
 // app.use(rateLimit({...}))
 app.set("trust proxy", true);
 
@@ -52,7 +50,7 @@ app.use(
 );
 
 app.use("/auth", Auth);
-app.use(userauth);
+// app.use(userauth);
 app.use("/api", api);
 
 app.listen(PORT, () => {

@@ -11,10 +11,10 @@ const logger = require("../Utils/logger");
 
 dotenv.config();
 
-const getClient = async (req, res) => {
+const getUnits = async (req, res) => {
   try {
     const payload = {
-      tableName: tables.client,
+      tableName: tables.units,
     };
     await GlobalSelect(payload, res);
   } catch (error) {
@@ -24,22 +24,23 @@ const getClient = async (req, res) => {
   }
 };
 
-const createClient = async (req, res) => {
+const createUnits = async (req, res) => {
   try {
-    const { name, createdby } = req.body;
+    const { unit_name, created_by, unit_code } = req.body;
 
-    if (!name) {
+    if (!unit_name) {
       return res
         .status(400)
         .send(RESPONSE(false, "Missing required fields", {}));
     }
 
     const payload = {
-      tableName: tables.client,
+      tableName: tables.units,
       databaseFields: {
-        name: name,
-        createdBy: createdby,
-        createdAt: moment.tz("Asia/Karachi").format("YYYY-MM-DD"),
+        unit_code: unit_code,
+        unit_name: unit_name,
+        created_by: created_by,
+        created_at: moment.tz("Asia/Karachi").format("YYYY-MM-DD-HH-mm-ss"),
       },
     };
 
@@ -50,11 +51,11 @@ const createClient = async (req, res) => {
   }
 };
 
-const updateClient = async (req, res) => {
+const updateUnits = async (req, res) => {
   try {
-    const { id, name } = req.body;
+    const { id, unit_code, unit_name, is_active, updated_by } = req.body;
 
-    if (!id || !name) {
+    if (!id && !unit_code) {
       return res
         .status(400)
         .send(RESPONSE(false, "Missing required fields", {}));
@@ -62,9 +63,12 @@ const updateClient = async (req, res) => {
 
     const payload = {
       id: id,
-      tableName: tables.client,
+      tableName: tables.units,
       databaseFields: {
-        name: name,
+        unit_name: unit_name,
+        is_active: is_active || 1,
+        updated_by: updated_by,
+        updated_at: moment.tz("Asia/Karachi").format("YYYY-MM-DD-HH-mm-ss"),
       },
     };
 
@@ -76,10 +80,9 @@ const updateClient = async (req, res) => {
   }
 };
 
-const deleteClient = async (req, res) => {
+const deleteUnits = async (req, res) => {
   try {
     const { id } = req.body;
-    console.log("id==>", req.body);
 
     if (!id) {
       return res
@@ -88,7 +91,7 @@ const deleteClient = async (req, res) => {
     }
 
     const payload = {
-      tableName: tables.client,
+      tableName: tables.units,
       databaseFields: {
         id: id,
       },
@@ -103,8 +106,8 @@ const deleteClient = async (req, res) => {
 };
 
 module.exports = {
-  getClient,
-  createClient,
-  updateClient,
-  deleteClient,
+  getUnits,
+  createUnits,
+  updateUnits,
+  deleteUnits,
 };

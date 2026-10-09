@@ -5,7 +5,7 @@ const logger = require("../Utils/logger"); // Import logger
 // ✅ Global Select - Fetch All Records
 const GlobalSelect = async (payload, res) => {
   try {
-    const sql = `SELECT * FROM ${payload.tableName} ORDER BY id DESC`;
+    const sql = `SELECT * FROM ${payload.tableName} WHERE is_deleted = 0 ORDER BY id DESC`;
 
     logger.info(`Executing Query: ${sql}`);
 

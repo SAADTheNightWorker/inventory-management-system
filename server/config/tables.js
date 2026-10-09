@@ -1,18 +1,20 @@
 const tablesName = {
-  brokerName: "brokerName",
-  category: "category",
-  claimWolfAgentName: "claimWolfAgentName",
-  client: "client",
-  expenceRecord: "expenceRecord",
-  insuranceCompany: "insuranceCompany",
-  paymentMethod: "paymentMethod",
-  policyRecord: "policyRecord",
-  revneueRecord: "revneueRecord",
   users: "users",
-  vendorsName: "vendorsName",
-  fleet_management: "fleet_management",
-  policyRecordSec: "policy_record_sec",
-  notifications: "notifications",
+  units: "units",
+  transaction_types: "transaction_types",
+  stock_ledger: "stock_ledger",
+  stock_balance: "stock_balance",
+  stations: "stations",
+  physical_adjustment_lines: "physical_adjustment_lines",
+  physical_adjustments: "physical_adjustments",
+  locations: "locations",
+  items: "items",
+  inventory_transaction_lines: "inventory_tansaction_lines",
+  inventory_tansactions: "inventory_transactions",
+  inventory_lots: "inventory_lots",
+  categories: "categories",
+  adjustment_reasons: "adjustment_reasons",
+
 };
 
 module.exports = tablesName;
